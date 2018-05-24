@@ -1,0 +1,19 @@
+{
+  "name": "chronicle-server",
+  "version": "1.0.0",
+  "description": "Express Node Backend Server for Chronicle",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdargitz/chronicle-server.git"
+  },
+  "author": "Marina Dargitz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mdargitz/chronicle-server/issues"
+  },
+  "homepage": "https://github.com/mdargitz/chronicle-server#readme"
+}
