@@ -2,18 +2,16 @@ DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users(
   id serial PRIMARY KEY,
-  username VARCHAR UNIQUE NOT NULL ,
-  password VARCHAR NOT NULL
+  username VARCHAR(72) UNIQUE NOT NULL ,
+  password VARCHAR(72) NOT NULL
 );
 
--- determine max length for username and password
--- add line to set username as indexed, also unique
--- refrences keyword
+CREATE UNIQUE INDEX username_id ON users (username);
 
-INSERT INTO users (username, password) VALUES 
-('JohnSmith', '1234'),
-('JaneDoe', '1234'),
-('JoeBlou', '1234');
+INSERT INTO users (id, username, password) VALUES 
+(1, 'JohnSmith', '1234'),
+(2, 'JaneDoe', '1234'),
+(3, 'JoeBlou', '1234');
 
 DROP TABLE IF EXISTS stories CASCADE;
 -- how to store photos?
@@ -30,13 +28,14 @@ CREATE TABLE stories (
   settingsummary text
 );
 
---index by title
+CREATE UNIQUE INDEX title_id ON stories (title);
 
+-- will need to add id's
 INSERT INTO stories 
-(title, description, picture, genre, period, plotsummary, settingsummary) VALUES
-('Story 1', 'this is the first story', 'banner.img', 'fantasy', 'mideval', 'some cool stuff happens', 'this is a cool world'),
-('Story 2', 'this is the second story', 'banner.img', 'fantasy', 'mideval', 'some cool stuff happens', 'this is a cool world'),
-('Story 3', 'this is the third story', 'banner.img', 'fantasy', 'mideval', 'some cool stuff happens', 'this is a cool world')
+(id, user_id, title, description, picture, genre, period, plotsummary, settingsummary) VALUES
+(10, 1, 'Story 1', 'this is the first story', 'banner.img', 'fantasy', 'mideval', 'some cool stuff happens', 'this is a cool world'),
+(11, 1, 'Story 2', 'this is the second story', 'banner.img', 'fantasy', 'mideval', 'some cool stuff happens', 'this is a cool world'),
+(12, 3, 'Story 3', 'this is the third story', 'banner.img', 'fantasy', 'mideval', 'some cool stuff happens', 'this is a cool world');
 
 
 DROP TABLE IF EXISTS characters CASCADE;
@@ -50,37 +49,47 @@ CREATE TABLE characters(
   description text,
   personality text,
   background text
-)
+);
 
 INSERT INTO characters 
-(name, age, occupation, description, personality, background) VALUES
-('Princess BunBun', '34 years old', 'Ruler of WhateverLand', 'A regular princess', 'Came from nowhere'),
-('Prince BunBun', '36 years old', 'Ruler of WhateverLand', 'A regular prince', 'Came from nowhere'),
-('That one guy', '56 years old', 'Pastry chef', 'A cool dude', 'Born in West Africa')
+(story_id, name, age, occupation, description, personality, background) VALUES
+(10, 'Princess BunBun', '34 years old', 'Ruler of WhateverLand', 'A regular princess','a bratty girl', 'Came from nowhere'),
+(10, 'Prince BunBun', '36 years old', 'Ruler of WhateverLand', 'A regular prince', 'a cowardly boy','Came from nowhere'),
+(12, 'That one guy', '56 years old', 'Pastry chef', 'A cool dude','stoic', 'Born in West Africa');
 
 DROP TABLE IF EXISTS settings CASCADE;
 
 CREATE TABLE settings(
   id serial PRIMARY KEY,
+  story_id INTEGER REFERENCES stories,
+  name VARCHAR NOT NULL,
+  picture VARCHAR,
   description text,
   notes text
 );
 
-INSERT INTO settings (description, notes) VALUES 
-('A tavern on the edge of town', 'this is where all the stuff goes down'),
-('Spaceport B7-03J, orbiting an obscure gas giant', 'main characters meet here'),
-('Castle of doom', 'Big bad battle happens here')
+CREATE INDEX name_id ON settings (name);
+
+INSERT INTO settings (story_id, name, picture, description, notes) VALUES 
+(10, 'The Drunken Star', 'pic.img','A tavern on the edge of town', 'this is where all the stuff goes down'),
+(10, 'Space Station', 'pic.img','Spaceport B7-03J, orbiting an obscure gas giant', 'main characters meet here'),
+(12, 'Castle', 'pic.img','Castle of doom', 'Big bad battle happens here');
 
 DROP TABLE IF EXISTS plots CASCADE;
 
 CREATE TABLE plots (
   id serial PRIMARY KEY,
+  story_id INTEGER REFERENCES stories,
+  name VARCHAR,
+  picture VARCHAR,
   description text,
   notes text
 );
 
-INSERT INTO plots (description, notes) VALUES 
-('The hero is presented with a problem', 'beginning of act 1'),
-('The hero does some awesome stuff but it totally goes wrong', 'Heroes journey af'),
-('The hero faces big bad', 'climax of plot')
+CREATE INDEX name_id ON plots (name);
+
+INSERT INTO plots (story_id, name, picture, description, notes) VALUES 
+(10, 'Conflict', 'pic.img', 'The hero is presented with a problem', 'beginning of act 1'),
+(10, 'Betrayal', 'pic.img', 'The hero does some awesome stuff but it totally goes wrong', 'Heroes journey af'),
+(12, 'Battle', 'pic.img', 'The hero faces big bad', 'climax of plot');
 
