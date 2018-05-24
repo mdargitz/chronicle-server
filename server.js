@@ -30,6 +30,18 @@ app.use('/api/characters', characterRouter);
 app.use('/api/settings', settingRouter);
 app.use('/api/plots', plotRouter);
 
+//404 Handler
+app.use((req,res,next)=>{
+  const err = new Error('Uh oh, not found!');
+  err.status = 404;
+  next(err);
+});
+
+//Error Handler
+app.use((req,res, next, err)=>{
+  res.json(err);
+});
+
 app.listen(PORT, function(){
   console.log('Server running on port: ' + PORT);
   console.log('Confirm database running');
