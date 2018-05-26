@@ -1,15 +1,17 @@
 module.exports = {
-  development : {
-    DATABASE_URL :  process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/chronicle',
+  development: {
     client: 'pg',
-    pool: {min: 1, max: 3}
+    connection: process.env.DATABASE_URL || 'postgres://postgres@localhost/chronicle',
+    debug: false, // http://knexjs.org/#Installation-debug
+    pool: { min: 1, max: 2 }
   },
-  production : {
-    DATABASE_URL : process.env.DATABASE_URL
+  production: {
+    client: 'pg',
+    connection: process.env.DATABASE_URL
   },
   test : {
-    DATABASE_URL : process.env.TEST_DATABASE_URL || 'postgres//postgres@localhost:5432/chronicletest',
     client: 'pg',
-    pool: {min:1, max: 3}
+    connection: process.env.TEST_DATABASE_URL || 'postgres//postgres@localhost/chronicletest',
+    pool: {min:1, max:2}
   }
 };
