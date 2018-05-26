@@ -37,13 +37,19 @@ app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common', {
 app.use(express.json());
 
 
+
+
+
 //All Routes
 app.use('/api/auth', authRouter);
+console.log('about to hit user router');
 app.use('/api/users', userRouter);
 app.use('/api/stories', storyRouter);
 app.use('/api/characters', characterRouter);
 app.use('/api/settings', settingRouter);
 app.use('/api/plots', plotRouter);
+
+
 
 //404 Handler
 app.use((req,res,next)=>{
@@ -53,11 +59,10 @@ app.use((req,res,next)=>{
 });
 
 //Error Handler
-app.use((req,res, next, err)=>{
-  res.json({
-    message : err.message,
-    error: err
-  });
+app.use((err, req,res, next)=>{
+  res
+    .status(err.status || 500)
+    .json({'message':err.message});
 });
 
 
