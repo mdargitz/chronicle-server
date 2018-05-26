@@ -1,15 +1,23 @@
 const express = require('express');
-require('dotenv').config();
+const dotenv = require('dotenv').config();
 const {PORT} = require('./config');
 const morgan = require('morgan');
 
 
+//Routers Import
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const storyRouter = require('./routes/story');
 const characterRouter = require('./routes/character');
 const settingRouter = require('./routes/setting');
 const plotRouter = require('./routes/plot');
+
+//Passport import and setup
+const passport = require('passport');
+const localStrategy = require('./passport/local');
+const jwtStrategy = require('./passport/jwt');
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 //Instantiate Express App
 const app = express();
