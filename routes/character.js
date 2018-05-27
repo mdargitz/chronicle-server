@@ -42,7 +42,7 @@ router.put('/:storyId/:id', (req, res, next)=>{
   const {id} = req.params;
 
   const updateableFields = ['name', 'age', 'occupation', 
-    'description', 'personality', 'background'];
+    'description', 'personality', 'background', 'picture'];
 
   const updatedCharacter = {};
 
@@ -72,7 +72,8 @@ router.post('/:storyId', (req, res, next)=>{
     occupation,
     description,
     personality,
-    background
+    background,
+    picture
   } = req.body;
 
   const newCharacter = {
@@ -83,7 +84,8 @@ router.post('/:storyId', (req, res, next)=>{
     occupation,
     description,
     personality,
-    background
+    background,
+    picture
   };
 
   if(!name){
