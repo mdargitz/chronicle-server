@@ -101,4 +101,18 @@ router.post('/:storyId', (req, res, next)=>{
     .catch(err => next(err));
 });
 
+router.delete('/:storyId/:id', (req, res, next)=>{
+  const user_id = req.user.id;
+  const story_id = req.params.storyId;
+  const {id} = req.params;
+
+  knex('characters')
+    .where({user_id, story_id, id})
+    .del()
+    .then(result =>{
+      res.status(204).json(result);
+    })
+    .catch(err => next(err));
+});
+
 module.exports= router;
