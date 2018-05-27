@@ -42,6 +42,7 @@ DROP TABLE IF EXISTS characters CASCADE;
 
 CREATE TABLE characters(
   id serial PRIMARY KEY,
+  user_id INTEGER REFERENCES users,
   story_id INTEGER REFERENCES stories,
   name text NOT NULL,
   age text,
