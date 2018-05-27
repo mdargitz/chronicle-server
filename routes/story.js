@@ -15,9 +15,23 @@ router.get('/', (req, res, next)=>{
     .where({user_id : req.user.id})
     .then(results => {
       if(results.length) {
-        res.json(results);
+        return res.json(results);
       }
       else return next();
+    })
+    .catch(err => next(err));
+});
+
+router.get('/:id', (req, res, next)=>{
+  const {id} = req.params;
+  const user_id = req.user.id;
+  knex('stories')
+    .where({id, user_id})
+    .then(result => {
+      if(result.length) {
+        return res.json(result[0]);
+      }
+      return next();
     })
     .catch(err => next(err));
 });
@@ -52,7 +66,7 @@ router.post('/', (req, res, next)=>{
     .insert(newStory)
     .returning(['title', 'user_id'])
     .then(result =>{
-      res.status(201).json(result);
+      return res.status(201).json(result);
     })
     .catch(err => next(err));
 });
