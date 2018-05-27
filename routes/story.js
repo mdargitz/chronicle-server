@@ -36,6 +36,32 @@ router.get('/:id', (req, res, next)=>{
     .catch(err => next(err));
 });
 
+router.put('/:id', (req,res,next)=>{
+  const {id} = req.params;
+  const user_id = req.user.id;
+
+  const updateableFields = ['title', 'description', 'picture',
+    'genre', 'period', 'plotsummary', 'settingsummary'];
+
+  const updatedStory = {};
+  updateableFields.map(field => {
+    if(field in req.body){
+      updatedStory[field] = req.body[field];
+    }});
+
+  knex('stories')
+    .where({id, user_id})
+    .update(updatedStory)
+    .returning(['id', 'title'])
+    .then(results => {
+      if(results.length){
+        return res.json(results);
+      }
+      return next();
+    })
+    .catch(err => next(err));
+});
+
 router.post('/', (req, res, next)=>{
   const {
     title,
