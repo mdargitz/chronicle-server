@@ -14,10 +14,7 @@ router.get('/', (req, res, next)=>{
     .select()
     .where({user_id : req.user.id})
     .then(results => {
-      if(results.length) {
-        return res.json(results);
-      }
-      else return next();
+      return res.json(results);
     })
     .catch(err => next(err));
 });
@@ -97,4 +94,16 @@ router.post('/', (req, res, next)=>{
     .catch(err => next(err));
 });
 
+router.delete('/:id', (req, res, next)=>{
+  const {id} = req.params;
+  const user_id = req.user.id;
+
+  knex('stories')
+    .where({id, user_id})
+    .del()
+    .then(results => {
+      res.status(204).json(results);
+    })
+    .catch(err => next(err));
+});
 module.exports= router;
