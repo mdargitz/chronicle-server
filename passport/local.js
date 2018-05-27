@@ -1,15 +1,16 @@
 //import resources from package
 const {Strategy : LocalStrategy} = require('passport-local');
 const knex = require('../knex');
+const bcrypt = require('bcrypt');
 
 const localStrategy = new LocalStrategy((username, password, done) => {
-
+  
   let user;
 
   knex('users')
     .where('username', username)
     .then(results => {
-      user = results;
+      user = results[0];
       if(!user){
         return Promise.reject({
           resason: 'LoginError',
@@ -17,8 +18,7 @@ const localStrategy = new LocalStrategy((username, password, done) => {
           location: 'username'
         });
       }
-
-      return user.validatePassword(password);
+      return bcrypt.compare(password, user.password);
     })
     .then(isValid => {
       if(!isValid){
