@@ -27,18 +27,19 @@ app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common', {
   skip:() => process.env.NODE_ENV === 'test'
 }));
 
-//Allow CORS for all domains (while in dev)
-// app.use('/', (req,res, next)=>{
-//   res.header('ACCESS-CONTROL-ALLOW-ORIGIN', '*');
-//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-// });
+//Allow CORS for all domains (while in dev) Sets CORS headers
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+  if (req.method === 'OPTIONS') {
+    return res.send(204);
+  }
+  next();
+});
 
 //body parser
 app.use(express.json());
-
-
-
-
 
 //All Routes
 app.use('/api/auth', authRouter);

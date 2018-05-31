@@ -28,6 +28,7 @@ const localStrategy = new LocalStrategy((username, password, done) => {
           location: 'username'
         });
       }
+      //construct new object with just the username and the ID
       done(null, user);
     })
     .catch(err => {
