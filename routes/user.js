@@ -47,14 +47,12 @@ router.post('/', function(req,res,next){
     })
     .then(() => bcrypt.hash(password, 10))  
     .then(result => {
-      console.log('still made it here?');
       const newUser = {
         username,
         password: result
       };
       return knex('users').select('id','username').insert(newUser);
-    }).then(result =>
-      res.json(result).status(201))
+    }).then(result => res.json(result).status(201))
     .catch(err => next(err));    
 });
 

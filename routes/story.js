@@ -10,6 +10,7 @@ router.use('/', passport.authenticate('jwt', {
 }));
 
 router.get('/', (req, res, next)=>{
+  
   knex('stories')
     .select()
     .where({user_id : req.user.id})

@@ -11,7 +11,7 @@ module.exports = {
   },
   test : {
     client: 'pg',
-    connection: process.env.TEST_DATABASE_URL || 'postgres//postgres@localhost/chronicletest',
+    connection: process.env.TEST_DATABASE_URL || 'postgres://postgres@localhost/chronicletest',
     pool: {min:1, max:2}
   }
 };

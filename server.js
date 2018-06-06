@@ -43,7 +43,6 @@ app.use(express.json());
 
 //All Routes
 app.use('/api/auth', authRouter);
-console.log('about to hit user router');
 app.use('/api/users', userRouter);
 app.use('/api/stories', storyRouter);
 app.use('/api/characters', characterRouter);
@@ -66,11 +65,11 @@ app.use((err, req,res, next)=>{
     .json({'message':err.message});
 });
 
-
-app.listen(PORT, function(){
-  console.log('Server running on port: ' + PORT);
-});
-
+if (require.main === module){
+  app.listen(PORT, function(){
+    console.log('Server running on port: ' + PORT);
+  });
+}
 
 module.exports = app;
 
