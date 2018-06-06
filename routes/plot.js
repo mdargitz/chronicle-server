@@ -56,7 +56,10 @@ router.put('/:storyId/:id', (req, res, next)=>{
     .update(updatedCharacter)
     .returning(['id', 'story_id', 'name'])
     .then(results => {
-      res.json(results);
+      if(results[0]){
+        return res.json(results);
+      }
+      return next();
     })
     .catch(err => next(err));
 });

@@ -51,8 +51,8 @@ router.post('/', function(req,res,next){
         username,
         password: result
       };
-      return knex('users').select('id','username').insert(newUser);
-    }).then(result => res.json(result).status(201))
+      return knex('users').select('id','username').insert(newUser).returning('id');
+    }).then(result => res.status(201).json(result))
     .catch(err => next(err));    
 });
 

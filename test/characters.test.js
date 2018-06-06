@@ -10,10 +10,10 @@ const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe('routes : stories', function() {
+describe('routes : characters', function() {
   
-  let storyDetails = ['id', 'user_id','title',
-    'description','picture', 'genre', 'period', 'plotsummary', 'settingsummary'];
+  let characterDetails = ['id', 'user_id','story_id', 'name',
+    'description','picture', 'age', 'occupation', 'personality', 'background'];
   let token;
 
   beforeEach(() => {
@@ -27,6 +27,7 @@ describe('routes : stories', function() {
   });
 
   after(() => {
+    console.log('not destroying connection');
     // return knex.destroy();
   });
 
@@ -37,10 +38,10 @@ describe('routes : stories', function() {
   });
 
   describe('Get All "/"',function (){
-    it('should return all stories for a given user', function(){
+    it('should return all characters for a story and given user', function(){
       let res;
       return chai.request(app)
-        .get('/api/stories')
+        .get('/api/characters/10')
         .set('Authorization', `Bearer ${token}`)
         .then(_res => {
           res = _res;
@@ -50,12 +51,12 @@ describe('routes : stories', function() {
             expect(story.user_id).to.be.equal(1);
           });
           
-          return knex('stories')
+          return knex('characters')
             .select()
-            .where({user_id : 1})
+            .where({user_id : 1, story_id : 10})
             .then(data => {
               expect(res.body.length).to.be.equal(data.length);
-              storyDetails.forEach(detail => {
+              characterDetails.forEach(detail => {
                 expect(res.body[0][detail]).to.be.equal(data[0][detail]);
               });
             });
@@ -64,22 +65,23 @@ describe('routes : stories', function() {
   });
 
   describe('Get by ID "/:id"', function(){
-    it('should return a single story given the correct ID', function(){
+    it('should return a single character given the correct ID', function(){
       let res;
       return chai.request(app)
-        .get('/api/stories/10')
+        .get('/api/characters/10/100')
         .set('Authorization', `Bearer ${token}`)
         .then(_res => {
           res = _res;
 
           expect(res).to.have.status(200);
           expect(res.body.user_id).to.be.equal(1);
+          expect(res.body.story_id).to.be.equal(10);
 
-          return knex('stories')
+          return knex('characters')
             .select()
-            .where({user_id: 1, id: 10})
+            .where({user_id: 1, id: 100})
             .then(data => {
-              storyDetails.forEach(detail => {
+              characterDetails.forEach(detail => {
                 expect(res.body[detail]).to.be.equal(data[0][detail]);
               });
             });
@@ -87,7 +89,7 @@ describe('routes : stories', function() {
     });
     it('should return a 404 given an incorrect ID', function(){
       return chai.request(app)
-        .get('/api/stories/8888888')
+        .get('/api/characters/10/9089787')
         .set('Authorization', `Bearer ${token}`)
         .then(res => {
           expect(res).to.have.status(404);
@@ -95,7 +97,7 @@ describe('routes : stories', function() {
     });
     it('should return a 404 given an ID that is not associated with the user', function(){
       return chai.request(app)
-        .get('/api/stories/3')
+        .get('/api/characters/10/102')
         .set('Authorization', `Bearer ${token}`)
         .then(res => {
           expect(res).to.have.status(404);
@@ -104,27 +106,27 @@ describe('routes : stories', function() {
   });
 
   describe('PUT by ID "/:id"', function(){
-    const newObj = {title : 'new title'};
-    it('should update a story given valid ID belonging to the user', function(){
+    const newObj = {name : 'new name'};
+    it('should update a character given valid ID, valid storyID and belonging to the user', function(){
       let res;
       return chai.request(app)
-        .put('/api/stories/10')
+        .put('/api/characters/10/100')
         .send(newObj)
         .set('Authorization', `Bearer ${token}`)
         .then(_res => {
           res = _res;
           expect(res).to.have.status(200);
-          return knex('stories')
-            .where({id : 10})
+          return knex('characters')
+            .where({id : 100})
             .select();
         })
         .then(data => {
-          expect(res.body[0].title).to.be.equal(data[0].title);
+          expect(res.body[0].name).to.be.equal(data[0].name);
         });
     });
     it('should return a 404 given an invalid ID', function(){
       return chai.request(app)
-        .put('/api/stories/100080')
+        .put('/api/characters/10/10080')
         .send(newObj)
         .set('Authorization', `Bearer ${token}`)
         .then(res => {
@@ -134,7 +136,7 @@ describe('routes : stories', function() {
     });
     it('should return a 404 given valid ID belonging to another user', function(){
       return chai.request(app)
-        .put('/api/stories/3')
+        .put('/api/characters/10/102')
         .send(newObj)
         .set('Authorization', `Bearer ${token}`)
         .then(res => {
@@ -144,91 +146,91 @@ describe('routes : stories', function() {
     });
   });
 
-  describe('POST new story "/"', function(){
+  describe('POST new character "/"', function(){
 
-    it('should create a new story given valid title, associated with the correct user', function(){
-      const newObj = { title : 'a new title' };
+    it('should create a new character given valid title, associated with the correct user', function(){
+      const newObj = { name : 'a new name' };
       let res;
       return chai.request(app)
-        .post('/api/stories')
+        .post('/api/characters/10')
         .set('Authorization', `Bearer ${token}`)
         .send(newObj)
         .then(_res => {
           res = _res;
           expect(res).to.have.status(201);
 
-          return knex('stories')
+          return knex('characters')
             .where({id : res.body[0].id})
             .select();
         })
         .then(data => {
-          expect(res.body[0].title).to.be.equal(data[0].title);
+          expect(res.body[0].name).to.be.equal(data[0].name);
         });
 
     });
-    it('should throw a status 400 error given no title', function(){
+    it('should throw a status 400 error given no name', function(){
       const newObj = {picture : 'newpng.jpg'};
       return chai.request(app)
-        .post('/api/stories')
+        .post('/api/characters/10')
         .set('Authorization', `Bearer ${token}`)
         .send(newObj)
         .then(res => {
           expect(res).to.have.status(400);
-          expect(res.body.message).to.be.equal('Missing a title!');
+          expect(res.body.message).to.be.equal('Missing a name!');
         });
     });
-    it('should create a new story given a title that does not include any additional fields', function(){
+    it('should create a new character given a name, that does not include any additional fields', function(){
       const newObj = { 
-        title : 'a new title',
+        name : 'a new name',
         notathing : 'better not show up'};
       let res;
       return chai.request(app)
-        .post('/api/stories')
+        .post('/api/characters/10')
         .set('Authorization', `Bearer ${token}`)
         .send(newObj)
         .then(_res => {
           res = _res;
           expect(res).to.have.status(201);
 
-          return knex('stories')
+          return knex('characters')
             .where({id : res.body[0].id})
             .select();
         })
         .then(data => {
-          expect(res.body[0].title).to.be.equal(data[0].title);
+          expect(res.body[0].name).to.be.equal(data[0].name);
           expect(res.body[0].notathing).to.not.exist;
         });
     });
   });
 
   describe('DELETE by id "/:id"', function(){
-    it('should delete a story give valid ID and belonging to the user', function(){
+    it('should delete a character given valid ID and belonging to the user', function(){
       let res;
       return chai.request(app)
-        .delete('/api/stories/10')
+        .delete('/api/characters/10/100')
         .set('Authorization', `Bearer ${token}`)
         .then(_res => {
           res = _res;
           expect(res).to.have.status(204);
 
-          return knex('stories')
-            .where({id: 2})
+          return knex('characters')
+            .where({id: 100})
             .select();
         })
         .then(data => {
           expect(data.length).to.be.equal(0);
         });
     });
-    it('should not delete a story give valid ID and not belonging to the user', function(){
+    it('should not delete a character given valid ID and not belonging to the user', function(){
       let res;
       return chai.request(app)
-        .delete('/api/stories/12')
+        .delete('/api/characters/12/102')
         .set('Authorization', `Bearer ${token}`)
         .then(_res => {
           res = _res;
           expect(res).to.have.status(204);
-          return knex('stories')
-            .where({id: 12})
+          return knex('characters')
+            .where({id: 102})
             .select();
         })
         .then(data => {
@@ -237,7 +239,7 @@ describe('routes : stories', function() {
     });
     it('should return 204 when given an invalid ID', function(){
       return chai.request(app)
-        .delete('/api/stories/12789')
+        .delete('/api/characters/10/12789')
         .set('Authorization', `Bearer ${token}`)
         .then(res => {
           expect(res).to.have.status(204);

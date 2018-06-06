@@ -21,7 +21,9 @@ router.get('/', (req, res, next)=>{
 });
 
 router.get('/:id', (req, res, next)=>{
+
   const {id} = req.params;
+
   const user_id = req.user.id;
   knex('stories')
     .where({id, user_id})
@@ -31,7 +33,7 @@ router.get('/:id', (req, res, next)=>{
       }
       return next();
     })
-    .catch(err => next(err));
+    .catch(err =>next(err));
 });
 
 router.put('/:id', (req,res,next)=>{
@@ -88,7 +90,7 @@ router.post('/', (req, res, next)=>{
   }
   knex('stories')
     .insert(newStory)
-    .returning(['title', 'user_id'])
+    .returning(['title', 'user_id', 'id'])
     .then(result =>{
       return res.status(201).json(result);
     })

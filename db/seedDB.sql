@@ -47,10 +47,10 @@ CREATE TABLE characters(
 );
 
 INSERT INTO characters 
-(story_id, name, age, occupation, description, personality, background) VALUES
-(10, 'Princess BunBun', '34 years old', 'Ruler of WhateverLand', 'A regular princess','a bratty girl', 'Came from nowhere', 'pic.jpeg'),
-(10, 'Prince BunBun', '36 years old', 'Ruler of WhateverLand', 'A regular prince', 'a cowardly boy','Came from nowhere', 'pic.jpeg'),
-(12, 'That one guy', '56 years old', 'Pastry chef', 'A cool dude','stoic', 'Born in West Africa', 'pic.jpeg');
+(id, story_id, user_id, name, age, occupation, description, personality, background, picture) VALUES
+(100, 10, 1, 'Princess BunBun', '34 years old', 'Ruler of WhateverLand', 'A regular princess','a bratty girl', 'Came from nowhere', 'pic.jpeg'),
+(101, 10, 1, 'Prince BunBun', '36 years old', 'Ruler of WhateverLand', 'A regular prince', 'a cowardly boy','Came from nowhere', 'pic.jpeg'),
+(102, 12, 3, 'That one guy', '56 years old', 'Pastry chef', 'A cool dude','stoic', 'Born in West Africa', 'pic.jpeg');
 
 DROP TABLE IF EXISTS settings CASCADE;
 
@@ -64,10 +64,10 @@ CREATE TABLE settings(
   notes text
 );
 
-INSERT INTO settings (story_id, name, picture, description, notes) VALUES 
-(10, 'The Drunken Star', 'pic.img','A tavern on the edge of town', 'this is where all the stuff goes down'),
-(10, 'Space Station', 'pic.img','Spaceport B7-03J, orbiting an obscure gas giant', 'main characters meet here'),
-(12, 'Castle', 'pic.img','Castle of doom', 'Big bad battle happens here');
+INSERT INTO settings (id, story_id, user_id, name, picture, description, notes) VALUES 
+(100, 10, 1, 'The Drunken Star', 'pic.img','A tavern on the edge of town', 'this is where all the stuff goes down'),
+(101, 10, 1, 'Space Station', 'pic.img','Spaceport B7-03J, orbiting an obscure gas giant', 'main characters meet here'),
+(102, 12, 3, 'Castle', 'pic.img','Castle of doom', 'Big bad battle happens here');
 
 DROP TABLE IF EXISTS plots CASCADE;
 
@@ -81,8 +81,8 @@ CREATE TABLE plots (
   notes text
 );
 
-INSERT INTO plots (story_id, name, picture, description, notes) VALUES 
-(10, 'Conflict', 'pic.img', 'The hero is presented with a problem', 'beginning of act 1'),
-(10, 'Betrayal', 'pic.img', 'The hero does some awesome stuff but it totally goes wrong', 'Heroes journey af'),
-(12, 'Battle', 'pic.img', 'The hero faces big bad', 'climax of plot');
+INSERT INTO plots (id, story_id, user_id, name, picture, description, notes) VALUES 
+(100, 10, 1,'Conflict', 'pic.img', 'The hero is presented with a problem', 'beginning of act 1'),
+(101, 10, 1,'Betrayal', 'pic.img', 'The hero does some awesome stuff but it totally goes wrong', 'Heroes journey af'),
+(102, 12, 2,'Battle', 'pic.img', 'The hero faces big bad', 'climax of plot');
 
